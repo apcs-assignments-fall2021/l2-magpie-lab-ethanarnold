@@ -1,5 +1,3 @@
-import java.util.Locale;
-
 /**
  * A program to carry on conversations with a human user.
  * This is the initial version that:  
@@ -63,6 +61,20 @@ public class Magpie
         }
         else if (findWord(statement, "I want") >= 0) {
             return transformIWantStatement(statement);
+        }
+        else if (findWord(statement, "I") == 0
+                && findWord(statement, "you")==statement.length()-3) {
+            return transformIYouStatement(statement);
+        }
+        else if (findWord(statement, "you") >= 0
+                && findWord(statement, "me") > findWord(statement, "you")) {
+            return transformYouMeStatement(statement);
+        }
+        else if (findWord(statement, "I want to") >= 0) {
+            return transformIWantToStatement(statement);
+        }
+        else if (findWord(statement, "my name is") >= 0) {
+            return transformMyNameIsStatement(statement);
         }
 
         else {
@@ -137,7 +149,7 @@ public class Magpie
 //        System.out.println(word);
         //   n o
         // 0 1 2 3 4 5 6
-        if((str.charAt(start - 1) == ' ') && (str.charAt(end + 1) == ' ')) {
+        if(start>0 && (str.charAt(start - 1) == ' ') && (str.charAt(end + 1) == ' ')) {
             return start;
         }
         else return -1;
@@ -168,8 +180,7 @@ public class Magpie
      */
     public String transformIYouStatement(String statement)
     {
-        //your code here
-        return "";
+        return "Why do you " + statement.substring(2, statement.length()-3) + "me?";
     }
 
     /**
@@ -180,8 +191,8 @@ public class Magpie
      */
     public String transformIWantToStatement(String statement)
     {
-        // your code here
-        return "";
+
+        return "What would it mean to " + statement.substring(10) + "?";
     }
 
 
@@ -195,7 +206,12 @@ public class Magpie
      */
     public String transformYouMeStatement(String statement)
     {
-        // your code here
-        return "";
+        int indexYou = findWord(statement,"you");
+        int indexMe = findWord(statement, "me");
+        return "What makes you think that I " + statement.substring(indexYou+4, indexMe) + "you?";
+    }
+    public String transformMyNameIsStatement(String statement) {
+        String name = statement.substring(findWord(statement, "my name is") + 11);
+        return "Your name is " + name + "? Well, you can call me Hal.";
     }
 }
