@@ -1,3 +1,5 @@
+import java.util.Locale;
+
 /**
  * A program to carry on conversations with a human user.
  * This is the initial version that:  
@@ -16,6 +18,9 @@ public class Magpie
      * Get a default greeting   
      * @return a greeting
      */
+
+
+
     public String getGreeting()
     {
         return "Hello, let's talk.";
@@ -31,19 +36,36 @@ public class Magpie
     public String getResponse(String statement)
     {
         String response = "";
-        if (statement.indexOf("no") >= 0)
-        {
+        if (statement.trim().length() == 0) {
+            response = "Say something, please.";
+        }
+        else if (findWord(statement, "no") >= 0) {
             response = "Why so negative?";
         }
-        else if (statement.indexOf("mother") >= 0
-                || statement.indexOf("father") >= 0
-                || statement.indexOf("sister") >= 0
-                || statement.indexOf("brother") >= 0)
-        {
+        else if (findWord(statement, "dog") >= 0 || findWord(statement, "cat") >= 0) {
+            response = "Tell me more about your pets.";
+        }
+        else if (findWord(statement, "nathan") >= 0) {
+            response = "He sounds like a good teacher.";
+        }
+
+        else if (findWord(statement, "mother") >= 0
+                || findWord(statement, "father") >= 0
+                || findWord(statement, "sister") >= 0
+                || findWord(statement, "brother") >= 0) {
             response = "Tell me more about your family.";
         }
-        else
-        {
+        else if (findWord(statement, "life, the universe, and everything") >= 0) {
+            response = "42.";
+        }
+        else if (findWord(statement, "pod bay doors") >= 0) {
+            response = "I'm sorry, Dave. I'm afraid I can't do that.";
+        }
+        else if (findWord(statement, "I want") >= 0) {
+            return transformIWantStatement(statement);
+        }
+
+        else {
             response = getRandomResponse();
         }
         return response;
@@ -55,28 +77,29 @@ public class Magpie
      */
     public String getRandomResponse()
     {
-        final int NUMBER_OF_RESPONSES = 4;
+        final int NUMBER_OF_RESPONSES = 6;
         double r = Math.random();
         int whichResponse = (int)(r * NUMBER_OF_RESPONSES);
         String response = "";
         
-        if (whichResponse == 0)
-        {
+        if (whichResponse == 0) {
             response = "Interesting, tell me more.";
         }
-        else if (whichResponse == 1)
-        {
+        else if (whichResponse == 1) {
             response = "Hmmm.";
         }
-        else if (whichResponse == 2)
-        {
+        else if (whichResponse == 2) {
             response = "Do you really think so?";
         }
-        else if (whichResponse == 3)
-        {
+        else if (whichResponse == 3) {
             response = "You don't say.";
         }
-    
+        else if (whichResponse == 4) {
+            response = "Really?";
+        }
+        else if (whichResponse == 5) {
+            response = "Go on.";
+        }
         return response;
     }
 
@@ -89,8 +112,36 @@ public class Magpie
 
     // The method returns the index of the first character in word
     // if it is found, and returns -1 otherwise. 
-    public int findWord(String str, String word) {
-        return -1;
+    public int findWord(String strCaps, String wordCaps) {
+        String word = wordCaps.toLowerCase();
+        String str = strCaps.toLowerCase();
+
+        int start = str.indexOf(word);
+        int end = start + word.length() - 1;
+//        System.out.println(word);
+
+        if (!(str.contains(word))) return -1;
+//        System.out.println(word);
+
+        if(start == 0 && str.length() == word.length()) return 0;
+//        System.out.println(word);
+
+        if(start == 0 && str.charAt(end+1)==' ') {
+            return 0;
+        }
+//        System.out.println(word);
+
+        if(end == str.length()-1 && str.charAt(start-1) == ' ') {
+            return start;
+        }
+//        System.out.println(word);
+        //   n o
+        // 0 1 2 3 4 5 6
+        if((str.charAt(start - 1) == ' ') && (str.charAt(end + 1) == ' ')) {
+            return start;
+        }
+        else return -1;
+
     }
 
     
@@ -104,8 +155,9 @@ public class Magpie
      */
     public String transformIWantStatement(String statement)
     {
-        //your code here
-        return "";
+        int begin = findWord(statement, "I want")+6;
+
+        return "Would you really be happy if you had" + statement.substring(begin) + "?";
     }
 
     /**
